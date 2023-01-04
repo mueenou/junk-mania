@@ -100,6 +100,7 @@ const addJunk = async () => {
     junkText.value = ""
   }
   refresh()
+  window.scrollTo(0, 0);
 }
 
 const addRate = async (value, id) => {
