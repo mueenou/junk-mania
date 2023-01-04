@@ -80,19 +80,20 @@ const authorInputHandler = (e) => {
 const {data: junks, refresh} = useFetch('/api/stylish_junks/stylish_junks')
 
 const filteredJunks = computed(() => {
-  return junks.value.filter((junk) => junk.garbage < 5)
+  const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
+  return newJunksList.reverse()
 })
 
 let authorName = ref("")
 let junkText = ref("")
 
 const addJunk = async () => {
-  if (authorName.value && junkText.value) {
+  if ((authorName.value || userFromCookie.value) && junkText.value) {
     const { data } = await useFetch('/api/stylish_junks/stylish_junks', {
       method: 'post',
       body: {
         text: junkText.value,
-        author: authorName.value
+        author: authorName.value || userFromCookie.value
       }
     })
     authorName.value = ""
