@@ -51,10 +51,10 @@
       </div>
     </div>
   </div>
-  <div class="fixed bottom-6 text-center bg-gray-700 rounded-full shadow-xl px-5 py-5 mt-2 w-[570px] left-1/2 -translate-x-1/2">
+  <div class="fixed w-[95%] bottom-6 text-center bg-gray-700 rounded-full md:w-[570px] shadow-xl px-5 py-5 mt-2 left-1/2 -translate-x-1/2">
     <form class="flex gap-x-4" @submit.prevent="addJunk">
-      <input :value="userFromCookie || authorName" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="rounded-full text-center w-36 h-12 p-2 text-black">
-      <input v-model="junkText" type="text" placeholder="Write your junk here..." class="rounded-full w-96 h-12 p-2 text-black">
+      <input :value="userFromCookie || authorName" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="rounded-full text-center w-[25%] h-12 p-2 text-black">
+      <input v-model="junkText" type="text" placeholder="Write your junk here..." class="rounded-full w-[60%] h-12 p-2 text-black">
       <button type="submit" class="group bg-white rounded-full w-14 text-black">
         <div class="group-hover:rotate-[30deg] duration-500 ease-out">🗑️</div>
       </button>
