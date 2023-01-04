@@ -8,5 +8,5 @@ export default defineNuxtConfig({
     mongodbUri: process.env.MONGODB_URI,
   },
 
-  modules: ["@nuxtjs/tailwindcss"],
+  modules: ["@nuxtjs/tailwindcss", "nuxt-icon"],
 });
