@@ -1,8 +1,23 @@
 <template>
-  <div class="p-2 text-white mb-32 w-full lg:w-[600px] md:w-[600px] mx-auto">
-    <h1 class="text-xl font-extrabold my-2 text-center">Junk Mania</h1>
-    <blockquote class="italic text-center text-sm mb-2 text-gray-500">- A place where junks matter -</blockquote>
-    <div class="message bg-gray-800 rounded-xl shadow-xl px-2 py-5 mb-2" v-for="junk in filteredJunks" :key="junk._id">
+  <div class="text-white mt-20 w-full lg:w-[600px] md:w-[600px] mx-auto">
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-lg">
+      <h1 class="text-xl font-extrabold my-2 text-center">Junk Mania</h1>
+      <blockquote class="italic text-center text-sm mb-2 text-gray-300">- A place where junks matter -</blockquote>
+    </div>
+    <div>
+      <form class="flex flex-col gap-y-4 border-b border-gray-700 py-2 px-2 md:border-x" @submit.prevent="addJunk">
+        <input :value="userFromCookie || authorName" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="w-[25%] h-12 p-2 text-white bg-black outline-none border-b border-gray-700">
+        <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-md text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
+        <button type="submit" class="group bg-white w-14 text-black self-end rounded-full h-10">
+          <div class="group-hover:rotate-[30deg] duration-500 ease-out">🗑️</div>
+        </button>
+      </form>
+    </div>
+    <div class="border-b border-gray-700 md:border-x py-4 hover:cursor-pointer hover:bg-gray-900/20" @click="refresh()">
+      <div v-if="pending" class="text-center">Loading...</div>
+      <p v-else class="text-center">Latest junks...</p>
+    </div>
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 md:border-x border-b border-gray-700" v-for="junk in filteredJunks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -51,21 +66,12 @@
       </div>
     </div>
   </div>
-  <div class="fixed w-[95%] bottom-6 text-center bg-gray-700 rounded-full md:w-[570px] shadow-xl px-5 py-5 mt-2 left-1/2 -translate-x-1/2">
-    <form class="flex gap-x-4" @submit.prevent="addJunk">
-      <input :value="userFromCookie || authorName" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="rounded-full text-center w-[25%] h-12 p-2 text-black">
-      <input v-model="junkText" type="text" placeholder="Write your junk here..." class="rounded-full w-[60%] h-12 p-2 text-black">
-      <button type="submit" class="group bg-white rounded-full w-14 text-black">
-        <div class="group-hover:rotate-[30deg] duration-500 ease-out">🗑️</div>
-      </button>
-    </form>
-  </div>
 </template>
 
 <script setup>
 useHead({
   bodyAttrs: {
-    class: 'bg-gray-900'
+    class: 'bg-black'
   }
 })
 
@@ -77,7 +83,7 @@ const authorInputHandler = (e) => {
   userFromCookie.value = authorName.value
 }
 
-const {data: junks, refresh} = useFetch('/api/stylish_junks/stylish_junks')
+const {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
 
 const filteredJunks = computed(() => {
   const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
