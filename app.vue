@@ -1,5 +1,5 @@
 <template>
-  <div class="p-2 text-white mb-32 w-[600px] mx-auto">
+  <div class="p-2 text-white mb-32 w-full lg:w-[600px] md:w-[600px] mx-auto">
     <h1 class="text-xl font-extrabold my-2 text-center">Junk Mania</h1>
     <blockquote class="italic text-center text-sm mb-2 text-gray-500">- A place where junks matter -</blockquote>
     <div class="message bg-gray-800 rounded-xl shadow-xl px-2 py-5 mb-2" v-for="junk in filteredJunks" :key="junk._id">
