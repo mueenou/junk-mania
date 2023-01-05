@@ -21,7 +21,7 @@
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in filteyellowJunks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in filteredJunks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -89,7 +89,7 @@ const authorInputHandler = (e) => {
 
 const {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
 
-const filteyellowJunks = computed(() => {
+const filteredJunks = computed(() => {
   const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
   return newJunksList.reverse()
 })
