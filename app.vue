@@ -32,32 +32,32 @@
       <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
       <div class="interactions mt-10 flex justify-evenly">
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('heart', junk._id)" class="interaction-button heart  hover:bg-red-800 text-white font-bold py-2 px-4 rounded-full text-lg border h-10 w-10 flex items-center justify-center border-gray-700 mb-1" >
-            ❤️
+          <button @click="addRate('heart', junk._id)" class="interaction-button duration-300 heart hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1" >
+            <Icon name="noto:heart-suit" size="20px" />
           </button>
           <div class="text-xs text-gray-400">
             {{ junk.heart }}
           </div>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('thumbsup', junk._id)" class="interaction-button thumbs-up hover:bg-green-800 text-white font-bold py-2 px-4 rounded-full text-lg border h-10 w-10 flex items-center justify-center border-gray-700 mb-1">
-            👍
+          <button @click="addRate('thumbsup', junk._id)" class="interaction-button duration-300 thumbs-up hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
+            <Icon name="noto:thumbs-up" size="20px" />
           </button>
           <div class="text-xs text-gray-400">
             {{ junk.thumbsUp }}
           </div>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('okay', junk._id)" class="interaction-button okay hover:bg-yellow-800 text-black font-bold py-2 px-4 rounded-full text-lg border h-10 w-10 flex items-center justify-center border-gray-700 mb-1">
-            👌
+          <button @click="addRate('okay', junk._id)" class="interaction-button duration-300 okay hover:bg-gray-700 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
+            <Icon name="noto:ok-hand" size="20px" />
           </button>
           <div class="text-xs text-gray-400">
             {{ junk.okay }}
           </div>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('garbage', junk._id)" class="interaction-button hover:bg-gray-700 garbage text-white font-bold py-2 px-4 rounded-full text-lg border h-10 w-10 flex items-center justify-center border-gray-700 mb-1">
-            🗑️
+          <button @click="addRate('garbage', junk._id)" class="interaction-button duration-300 hover:bg-gray-700 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
+            <Icon name="noto:thumbs-down" size="20px" />
           </button>
           <div class="text-xs text-gray-400">
             {{ junk.garbage }}
