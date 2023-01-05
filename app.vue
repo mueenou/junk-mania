@@ -21,7 +21,7 @@
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in filteredJunks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks.junks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -69,8 +69,10 @@
         </div>
       </div>
     </div>
-    <div>
-      <button @click="loadMore()">Load more...</button>
+    <div class="py-4 text-center">
+      <button class="mx-auto" @click="loadMore()">
+        <Icon name="line-md:align-justify" size="30px"/>
+      </button>
     </div>
   </div>
 </template>
@@ -90,16 +92,14 @@ const authorInputHandler = (e) => {
   userFromCookie.value = authorName.value
 }
 
-let {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
-
-const filteredJunks = computed(() => {
-  const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
-  return newJunksList.reverse()
-})
+let {data: junks, refresh: refreshJunks, pending} = useLazyFetch('/api/stylish_junks/stylish_junks')
 
 let authorName = ref("")
 let junkText = ref("")
 
+watch(junks, () => {
+  console.log('here')
+})
 const addJunk = async () => {
   if ((authorName.value || userFromCookie.value) && junkText.value) {
     const { data } = await useFetch('/api/stylish_junks/stylish_junks', {
@@ -111,7 +111,7 @@ const addJunk = async () => {
     })
     authorName.value = ""
     junkText.value = ""
-    refresh()
+    refreshJunks()
   }
   window.scrollTo(0, 0);
 }
@@ -120,14 +120,16 @@ const addRate = async (value, id) => {
   const {data: resAddRate} = await useFetch(`/api/stylish_junks/stylish_junks?id=${id}&rating=${value}`, {
     method: 'put',
   })
-  refresh()
+  refreshJunks()
 }
-
+let page = 0
 const loadMore = async () => {
-  const junksCounter = junks.value.length
-  const {data} = await useFetch('/api/stylish_junks/stylish_junks?limit='+junksCounter)
-  junks = await data
-  console.log(junks)
+  // const junksCounter = junks.value.length
+  page++
+  const {data: newData} = await useFetch(`/api/stylish_junks/stylish_junks?page=${page}&limit=3`)
+  console.log(newData.value.junks)
+  junks.value.junks.push(newData.junks)
+  // refreshJunks()
 }
 
 </script>
