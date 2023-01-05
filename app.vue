@@ -69,6 +69,9 @@
         </div>
       </div>
     </div>
+    <div>
+      <button @click="loadMore()">Load more...</button>
+    </div>
   </div>
 </template>
 
@@ -87,7 +90,7 @@ const authorInputHandler = (e) => {
   userFromCookie.value = authorName.value
 }
 
-const {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
+let {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
 
 const filteredJunks = computed(() => {
   const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
@@ -118,6 +121,13 @@ const addRate = async (value, id) => {
     method: 'put',
   })
   refresh()
+}
+
+const loadMore = async () => {
+  const junksCounter = junks.value.length
+  const {data} = await useFetch('/api/stylish_junks/stylish_junks?limit='+junksCounter)
+  junks = await data
+  console.log(junks)
 }
 
 </script>

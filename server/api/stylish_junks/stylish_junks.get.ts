@@ -30,6 +30,15 @@ const stylishJunkSchema = new Schema({
 export const StylishJunk = model<any>("StylishJunk", stylishJunkSchema);
 
 export default defineEventHandler(async (event) => {
-  const junks = StylishJunk.find();
+  console.log(Number(getQuery(event).limit));
+  // let limit = getQuery(event).limit;
+  // console.log(limit);
+  const junks = await StylishJunk.find({}, null, {
+    limit:
+      Number(getQuery(event).limit) > 0
+        ? Number(getQuery(event).limit) + 6
+        : 15,
+  });
+  // console.log(junks);
   return junks;
 });
