@@ -36,32 +36,32 @@
       <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
       <div class="interactions mt-10 flex justify-evenly">
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('heart', junk._id)" class="relative interaction-button duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1" >
-            <Icon name="noto:heart-suit" size="20px" />
+          <button @click="addRate('heart', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.heart > 0 ? 'bg-gray-700/30' : ''}`" >
+            <Icon name="noto:heart-suit" size="20px" class="group-active:animate-bounce" />
             <div v-if="junk.heart > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.heart }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('thumbsup', junk._id)" class="relative interaction-button duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
-            <Icon name="noto:thumbs-up" size="20px" />
+          <button @click="addRate('thumbsup', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.thumbsUp > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:thumbs-up" size="20px" class="group-active:animate-bounce" />
             <div v-if="junk.thumbsUp > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.thumbsUp }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('okay', junk._id)" class="relative interaction-button duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
-            <Icon name="noto:ok-hand" size="20px" />
+          <button @click="addRate('okay', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.okay > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:ok-hand" size="20px" class="group-active:animate-bounce" />
             <div v-if="junk.okay > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.okay }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('garbage', junk._id)" class="relative interaction-button duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1">
-            <Icon name="noto:thumbs-down" size="20px" />
+          <button @click="addRate('garbage', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.garbage > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:thumbs-down" size="20px" class="group-active:animate-bounce" />
             <div v-if="junk.garbage > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.garbage }}
             </div>
