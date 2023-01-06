@@ -21,7 +21,7 @@
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks.junks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -93,13 +93,18 @@ const authorInputHandler = (e) => {
 }
 
 let page = ref(0)
-let {data: junks, refresh: refreshJunks, pending} = useFetch(`/api/stylish_junks/stylish_junks?page=${page.value}`)
+const {data: junks, refresh: refreshJunks, pending} = useFetch(`/api/stylish_junks/stylish_junks`, {
+  params: {
+    page: page.value
+  },
+  key: page.value
+})
 
 function next() {
   page.value = page.value + 1
   console.log(page.value)
-  refreshJunks({dedupe: true})
-  console.log(junks.value.junks)
+  refreshJunks()
+  // https://github.com/nuxt/framework/issues/5993
 }
 let authorName = ref("")
 let junkText = ref("")
