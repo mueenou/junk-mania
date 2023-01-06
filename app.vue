@@ -93,42 +93,52 @@ const authorInputHandler = (e) => {
 }
 
 let page = ref(0)
-const {data: junks, refresh: refreshJunks, pending} = useFetch(`/api/stylish_junks/stylish_junks`, {
-  params: {
-    page: page.value
-  },
-  key: page.value
-})
 
-function next() {
+const {data: junks, refresh, pending} = await useAsyncData(
+  'junks',
+  () =>
+    $fetch(`/api/stylish_junks/stylish_junks`, {
+      params: {
+        page: page.value,
+      },
+    }),
+  {
+    watch: [page],
+  }
+);
+
+async function next() {
   page.value = page.value + 1
-  console.log(page.value)
-  refreshJunks()
-  // https://github.com/nuxt/framework/issues/5993
+  refresh()
 }
 let authorName = ref("")
 let junkText = ref("")
 const addJunk = async () => {
   if ((authorName.value || userFromCookie.value) && junkText.value) {
-    const { data } = await useFetch('/api/stylish_junks/stylish_junks', {
+    const { data: addedJunkRes } = await useAsyncData('add_junk', () => $fetch(`/api/stylish_junks/stylish_junks`,{
       method: 'post',
       body: {
         text: junkText.value,
         author: authorName.value || userFromCookie.value
       }
     })
+    )
     authorName.value = ""
     junkText.value = ""
-    refreshJunks()
+    refresh()
   }
   window.scrollTo(0, 0);
 }
 
 const addRate = async (value, id) => {
-  const {data: resAddRate} = await useFetch(`/api/stylish_junks/stylish_junks?id=${id}&rating=${value}`, {
+  const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
     method: 'put',
-  })
-  refreshJunks()
+    params: {
+      id: id,
+      rating: value
+    }
+  }))
+  refresh()
 }
 
 
