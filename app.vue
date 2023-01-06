@@ -70,7 +70,7 @@
       </div>
     </div>
     <div class="py-4 text-center">
-      <button class="mx-auto" @click="loadMore()">
+      <button class="mx-auto" @click="next()">
         <Icon name="line-md:align-justify" size="30px"/>
       </button>
     </div>
@@ -92,14 +92,17 @@ const authorInputHandler = (e) => {
   userFromCookie.value = authorName.value
 }
 
-let {data: junks, refresh: refreshJunks, pending} = useLazyFetch('/api/stylish_junks/stylish_junks')
+let page = ref(0)
+let {data: junks, refresh: refreshJunks, pending} = useFetch(`/api/stylish_junks/stylish_junks?page=${page.value}`)
 
+function next() {
+  page.value = page.value + 1
+  console.log(page.value)
+  refreshJunks({dedupe: true})
+  console.log(junks.value.junks)
+}
 let authorName = ref("")
 let junkText = ref("")
-
-watch(junks, () => {
-  console.log('here')
-})
 const addJunk = async () => {
   if ((authorName.value || userFromCookie.value) && junkText.value) {
     const { data } = await useFetch('/api/stylish_junks/stylish_junks', {
@@ -122,14 +125,6 @@ const addRate = async (value, id) => {
   })
   refreshJunks()
 }
-let page = 0
-const loadMore = async () => {
-  // const junksCounter = junks.value.length
-  page++
-  const {data: newData} = await useFetch(`/api/stylish_junks/stylish_junks?page=${page}&limit=3`)
-  console.log(newData.value.junks)
-  junks.value.junks.push(newData.junks)
-  // refreshJunks()
-}
+
 
 </script>
