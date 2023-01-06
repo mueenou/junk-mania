@@ -21,7 +21,7 @@
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in filteredJunks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -69,6 +69,11 @@
         </div>
       </div>
     </div>
+    <div class="py-4 text-center">
+      <button class="mx-auto" @click="next()">
+        <Icon name="line-md:align-justify" size="30px"/>
+      </button>
+    </div>
   </div>
 </template>
 
@@ -87,25 +92,37 @@ const authorInputHandler = (e) => {
   userFromCookie.value = authorName.value
 }
 
-const {data: junks, refresh, pending} = useFetch('/api/stylish_junks/stylish_junks')
+let page = ref(0)
 
-const filteredJunks = computed(() => {
-  const newJunksList = junks.value.filter((junk) => junk.garbage < 5)
-  return newJunksList.reverse()
-})
+const {data: junks, refresh, pending} = await useAsyncData(
+  'junks',
+  () =>
+    $fetch(`/api/stylish_junks/stylish_junks`, {
+      params: {
+        page: page.value,
+      },
+    }),
+  {
+    watch: [page],
+  }
+);
 
+async function next() {
+  page.value = page.value + 1
+  refresh()
+}
 let authorName = ref("")
 let junkText = ref("")
-
 const addJunk = async () => {
   if ((authorName.value || userFromCookie.value) && junkText.value) {
-    const { data } = await useFetch('/api/stylish_junks/stylish_junks', {
+    const { data: addedJunkRes } = await useAsyncData('add_junk', () => $fetch(`/api/stylish_junks/stylish_junks`,{
       method: 'post',
       body: {
         text: junkText.value,
         author: authorName.value || userFromCookie.value
       }
     })
+    )
     authorName.value = ""
     junkText.value = ""
     refresh()
@@ -114,10 +131,15 @@ const addJunk = async () => {
 }
 
 const addRate = async (value, id) => {
-  const {data: resAddRate} = await useFetch(`/api/stylish_junks/stylish_junks?id=${id}&rating=${value}`, {
+  const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
     method: 'put',
-  })
+    params: {
+      id: id,
+      rating: value
+    }
+  }))
   refresh()
 }
+
 
 </script>
