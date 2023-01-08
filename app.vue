@@ -21,7 +21,7 @@
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -36,32 +36,32 @@
       <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
       <div class="interactions mt-10 flex justify-evenly">
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('heart', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.heart > 0 ? 'bg-gray-700/30' : ''}`" >
-            <Icon name="noto:heart-suit" size="20px" class="group-active:animate-bounce" />
+          <button @click="addRate(index, 'heart', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.heart > 0 ? 'bg-gray-700/30' : ''}`" >
+            <Icon name="noto:heart-suit" size="20px" :class="{'animate-bounce': heartAdding && (index == currentId)}" />
             <div v-if="junk.heart > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.heart }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('thumbsup', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.thumbsUp > 0 ? 'bg-gray-700/30' : ''}`">
-            <Icon name="noto:thumbs-up" size="20px" class="group-active:animate-bounce" />
+          <button @click="addRate(index, 'thumbsup', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.thumbsUp > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:thumbs-up" size="20px" :class="{'animate-bounce': thumbsupAdding && (index == currentId)}" />
             <div v-if="junk.thumbsUp > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.thumbsUp }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('okay', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.okay > 0 ? 'bg-gray-700/30' : ''}`">
-            <Icon name="noto:ok-hand" size="20px" class="group-active:animate-bounce" />
+          <button @click="addRate(index, 'okay', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.okay > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:ok-hand" size="20px" :class="{'animate-bounce': okayAdding && (index == currentId)}" />
             <div v-if="junk.okay > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.okay }}
             </div>
           </button>
         </div>
         <div class="flex flex-col items-center justify-center">
-          <button @click="addRate('garbage', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.garbage > 0 ? 'bg-gray-700/30' : ''}`">
-            <Icon name="noto:thumbs-down" size="20px" class="group-active:animate-bounce" />
+          <button @click="addRate(index, 'garbage', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.garbage > 0 ? 'bg-gray-700/30' : ''}`">
+            <Icon name="noto:thumbs-down" size="20px" :class="{'animate-bounce': garbageAdding && (index == currentId)}" />
             <div v-if="junk.garbage > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
               {{ junk.garbage }}
             </div>
@@ -143,7 +143,34 @@ const addJunk = async () => {
   window.scrollTo(0, 0);
 }
 
-const addRate = async (value, id) => {
+const currentId = ref(null)
+const heartAdding = ref(false)
+const thumbsupAdding = ref(false)
+const okayAdding = ref(false)
+const garbageAdding = ref(false)
+
+const addRate = async (index, value, id) => {
+  switch (value) {
+    case 'heart':
+      heartAdding.value = true
+      currentId.value = index
+      break;
+    case 'thumbsup':
+      thumbsupAdding.value = true
+      currentId.value = index
+      break;
+    case 'okay':
+      okayAdding.value = true
+      currentId.value = index
+      break;
+    case 'garbage':
+      garbageAdding.value = true
+      currentId.value = index
+      break;
+    default:
+      break;
+  }
+  setTimeout(async () => {
     const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
       method: 'put',
       params: {
@@ -152,5 +179,11 @@ const addRate = async (value, id) => {
       }
     }))
     refresh()
+    heartAdding.value = false
+    thumbsupAdding.value = false
+    okayAdding.value = false
+    garbageAdding.value = false
+    currentId.value = null
+    }, 200)
   }
 </script>
