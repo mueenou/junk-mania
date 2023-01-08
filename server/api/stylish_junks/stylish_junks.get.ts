@@ -35,10 +35,18 @@ export const StylishJunk = model<any>("StylishJunk", stylishJunkSchema);
 export default defineEventHandler(async (event) => {
   const junksPerPage = 6;
   const page = Number(getQuery(event).page);
+  const limit = () => {
+    if (page == 0) {
+      return junksPerPage;
+    } else {
+      console.log(junksPerPage * page);
+      return junksPerPage * (page + 1);
+    }
+  };
   const junks = await StylishJunk.find({ garbage: { $lt: 5 } })
     .sort({
       createdAt: -1,
     })
-    .limit(!page ? 6 : junksPerPage * page);
+    .limit(Number(limit()));
   return junks;
 });

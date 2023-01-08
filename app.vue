@@ -15,13 +15,13 @@
         </button>
       </form>
     </div>
-    <div class="border-b border-gray-700 md:border-x py-4 hover:cursor-pointer hover:bg-gray-900/20" @click="refresh()">
+    <div class="border-b border-gray-700 h-16 md:border-x py-4 hover:cursor-pointer hover:bg-gray-900/20" @click="refresh()">
       <div v-if="pending" class="text-center">
         <Icon size="30px" class="text-yellow-400" name="line-md:loading-twotone-loop"/>
       </div>
       <p v-else class="text-center">Latest junks...</p>
     </div>
-    <div class="message bg-black hover:bg-gray-900/20 px-2 py-5 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks" :key="junk._id">
+    <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="junk in junks" :key="junk._id">
       <div v-if="junk.author" class="flex justify-end mb-2">
         <span>
           <p class="text-xs font-light text-gray-500">- {{ junk.author }} -</p>
@@ -70,7 +70,10 @@
       </div>
     </div>
     <div class="py-4 text-center">
-      <button class="mx-auto" @click="next()">
+      <div v-if="pending" class="text-center">
+        <Icon size="30px" class="text-yellow-400" name="line-md:loading-twotone-loop"/>
+      </div>
+      <button v-else class="mx-auto" @click="next()">
         <Icon name="line-md:align-justify" size="30px"/>
       </button>
     </div>
@@ -83,6 +86,16 @@ useHead({
     class: 'bg-black'
   }
 })
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScroll)
+})
+
+function handleScroll() {
+  if(window.scrollY + window.innerHeight >= document.body.scrollHeight + 10) {
+    next()
+  }
+}
 
 const userFromCookie = useCookie('user')
 
@@ -131,15 +144,13 @@ const addJunk = async () => {
 }
 
 const addRate = async (value, id) => {
-  const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
-    method: 'put',
-    params: {
-      id: id,
-      rating: value
-    }
-  }))
-  refresh()
-}
-
-
+    const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
+      method: 'put',
+      params: {
+        id: id,
+        rating: value
+      }
+    }))
+    refresh()
+  }
 </script>
