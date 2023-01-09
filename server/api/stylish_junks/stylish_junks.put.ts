@@ -1,49 +1,22 @@
 import { StylishJunk } from "./stylish_junks.get";
 
 export default defineEventHandler(async (event) => {
-  const { id, rating } = getQuery(event);
-  switch (rating) {
-    case "heart":
-      const updatedJunkHeart = await StylishJunk.findByIdAndUpdate(
-        id,
-        {
-          $inc: { heart: 1 },
-        },
-        { new: true } //to return the new document
-      );
-      return updatedJunkHeart;
-      break;
-    case "thumbsup":
-      const updatedJunkThumbsUp = await StylishJunk.findByIdAndUpdate(
-        id,
-        {
-          $inc: { thumbsUp: 1 },
-        },
-        { new: true } //to return the new document
-      );
-      return updatedJunkThumbsUp;
-      break;
-    case "okay":
-      const updatedJunkOkay = await StylishJunk.findByIdAndUpdate(
-        id,
-        {
-          $inc: { okay: 1 },
-        },
-        { new: true } //to return the new document
-      );
-      return updatedJunkOkay;
-      break;
-    case "garbage":
-      const updatedJunkGarbage = await StylishJunk.findByIdAndUpdate(
-        id,
-        {
-          $inc: { garbage: 1 },
-        },
-        { new: true } //to return the new document
-      );
-      return updatedJunkGarbage;
-      break;
-    default:
-      break;
+  const { junkId } = getQuery(event);
+  const { userId, interaction } = await readBody(event);
+  let junk = await StylishJunk.findById(junkId);
+  console.log(junk.hearts);
+  junk[interaction].push(userId);
+  if (junk[interaction].includes(userId)) {
+    const index = junk[interaction].findIndex((x: any) => x == userId);
+    junk = junk[interaction].splice(index, 1);
+  }
+  try {
+    await junk.save();
+    return {
+      message: "junk saved successfully",
+      hearts: junk[interaction].length,
+    };
+  } catch (error) {
+    return error;
   }
 });

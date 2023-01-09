@@ -6,24 +6,33 @@ const stylishJunkSchema = new Schema(
       type: String,
       required: true,
     },
-    heart: {
-      type: Number,
-      default: 0,
-    },
-    thumbsUp: {
-      type: Number,
-      default: 0,
-    },
-    okay: {
-      type: Number,
-      default: 0,
-    },
-    garbage: {
-      type: Number,
-      default: 0,
-    },
-    author: {
-      type: String,
+    hearts: [
+      Object({
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      }),
+    ],
+    thumbsUps: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    okays: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    garbages: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
