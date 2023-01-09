@@ -38,8 +38,8 @@
         <div class="flex flex-col items-center justify-center">
           <button @click="addRate(index, 'heart', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.heart > 0 ? 'bg-gray-700/30' : ''}`" >
             <Icon name="noto:heart-suit" size="20px" :class="{'animate-bounce': heartAdding && (index == currentId)}" />
-            <div v-if="junk.heart > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
-              {{ junk.heart }}
+            <div v-if="junk.heart.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
+              {{ junk.heart.length || "" }}
             </div>
           </button>
         </div>
@@ -110,7 +110,7 @@ let page = ref(0)
 const {data: junks, refresh, pending} = await useAsyncData(
   'junks',
   () =>
-    $fetch(`/api/stylish_junks/stylish_junks`, {
+    $fetch(`/api/stylish_junks`, {
       params: {
         page: page.value,
       },
@@ -128,7 +128,7 @@ let authorName = ref("")
 let junkText = ref("")
 const addJunk = async () => {
   if ((authorName.value || userFromCookie.value) && junkText.value) {
-    const { data: addedJunkRes } = await useAsyncData('add_junk', () => $fetch(`/api/stylish_junks/stylish_junks`,{
+    const { data: addedJunkRes } = await useAsyncData('add_junk', () => $fetch(`/api/stylish_junks`,{
       method: 'post',
       body: {
         text: junkText.value,
@@ -171,7 +171,7 @@ const addRate = async (index, value, id) => {
       break;
   }
   setTimeout(async () => {
-    const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks/stylish_junks`, {
+    const {data: resAddRate} = await useAsyncData('add_rate', () => $fetch(`/api/stylish_junks`, {
       method: 'put',
       params: {
         id: id,

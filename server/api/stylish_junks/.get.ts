@@ -7,10 +7,10 @@ const stylishJunkSchema = new Schema(
       required: true,
     },
     hearts: [
-      Object({
+      {
         type: Schema.Types.ObjectId,
         ref: "User",
-      }),
+      },
     ],
     thumbsUps: [
       {
@@ -30,7 +30,7 @@ const stylishJunkSchema = new Schema(
         ref: "User",
       },
     ],
-    user: {
+    author: {
       type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
@@ -48,7 +48,6 @@ export default defineEventHandler(async (event) => {
     if (page == 0) {
       return junksPerPage;
     } else {
-      console.log(junksPerPage * page);
       return junksPerPage * (page + 1);
     }
   };
