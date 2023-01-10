@@ -24,7 +24,7 @@
       <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
         <div v-if="junk.username" class="flex justify-end mb-2">
           <span>
-            <p class="text-xs font-light text-gray-500">- {{ junk.username }} -</p>
+            <p class="text-xs font-light text-gray-500">- {{ junk.username || "" }} -</p>
           </span>
         </div>
         <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
@@ -91,7 +91,7 @@
     }
   }
   const userCookie = useCookie('user')
-  const userName = userCookie.value.username
+  const userName = userCookie.value.username || ""
   
   const authorInputHandler = (e) => {
     authorName.value = e.target.value

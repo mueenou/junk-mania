@@ -54,10 +54,14 @@ export default defineEventHandler(async (event) => {
       return junksPerPage * (page + 1);
     }
   };
-  const junks = await StylishJunk.find({ garbage: { $lt: 5 } })
+  const junks = await StylishJunk.find({
+    $expr: { $lt: [{ $size: "$garbages" }, 5] },
+  })
     .sort({
       createdAt: -1,
     })
     .limit(Number(limit()));
+
+  console.log(junks);
   return junks;
 });
