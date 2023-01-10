@@ -35,6 +35,9 @@ const stylishJunkSchema = new Schema(
       ref: "User",
       required: true,
     },
+    username: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

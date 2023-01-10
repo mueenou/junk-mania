@@ -1,10 +1,11 @@
 import { StylishJunk } from "./.get";
 
 export default defineEventHandler(async (event) => {
-  const { junkId } = getQuery(event),
-    { interaction } = getRouterParams(event),
-    { userId } = await readBody(event),
-    junk = await StylishJunk.findById(junkId);
+  console.log(getQuery(event));
+  const { junkId } = getQuery(event);
+  const { interaction } = getRouterParams(event);
+  const { userId } = await readBody(event);
+  const junk = await StylishJunk.findById(junkId);
   if (junk[interaction].includes(userId)) {
     StylishJunk.findOneAndUpdate(
       { _id: junkId },

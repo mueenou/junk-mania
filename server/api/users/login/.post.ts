@@ -9,7 +9,10 @@ export default defineEventHandler(async (event) => {
   } else {
     try {
       if (user.password == password) {
-        return { message: "user connected", user: user._id };
+        return {
+          message: "user connected",
+          user: { id: user._id, username: user.username, email: user.email },
+        };
       }
     } catch (error) {
       return { message: "invalid password" };
