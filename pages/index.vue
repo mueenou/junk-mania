@@ -1,12 +1,19 @@
 <template>
-    <div class="text-white mt-20 w-full lg:w-[600px] md:w-[600px] mx-auto">
-      <div class="fixed top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-lg">
-        <h1 class="text-xl font-extrabold my-2 text-center">Junkmania</h1>
-        <blockquote class="italic text-center text-sm mb-2 text-gray-300">- A place where junks matter -</blockquote>
+    <div class="text-white mt-16 w-full lg:w-[600px] md:w-[600px] mx-auto">
+      <div class="fixed flex flex-row justify-between py-3 md:w-[600px] md:border-x border-gray-700 top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-lg px-2 items-center">
+        <div>
+          <h1 class="text-xl font-extrabold my-2 text-center">Home</h1>
+        </div>
+        <button @click="userCookie = null" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold h-10 w-16 rounded">
+          <span v-if="userCookie">Logout</span>
+          <nuxt-link v-else to="/login">
+            <span>Login</span>
+          </nuxt-link>
+        </button>
       </div>
-      <div>
+      <div v-if="userCookie">
         <form class="flex flex-col gap-y-4 border-b border-gray-700 py-2 px-2 md:border-x" @submit.prevent="addJunk">
-          <input :value="userName || authorName" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="w-[25%] h-12 p-2 text-white bg-black outline-none border-b border-gray-700">
+          <input :value="authorName || userCookie?.username" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="w-[25%] h-12 p-2 text-white bg-black outline-none border-b border-gray-700">
           <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-md text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
           <button type="submit" class="group bg-yellow-500 w-14 text-black self-end rounded-full h-10">
             <div class="group-hover:rotate-[30deg] duration-500 ease-out">
@@ -14,6 +21,9 @@
             </div>
           </button>
         </form>
+      </div>
+      <div class="border-b border-gray-700 py-2 px-2 md:border-x text-center" v-else>
+        <p class="text-xs">You are not connected.</p>
       </div>
       <div class="border-b border-gray-700 h-16 md:border-x py-4 hover:cursor-pointer hover:bg-gray-900/20" @click="refresh()">
         <div v-if="pending" class="text-center">
@@ -36,7 +46,7 @@
         <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
         <div class="interactions mt-10 flex justify-evenly">
           <div class="flex flex-col items-center justify-center">
-            <button @click="addRate(index, 'hearts', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.hearts.includes(userCookie.id) ? 'bg-gray-700/30' : ''}`" >
+            <button @click="addRate(index, 'hearts', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.hearts.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`" >
               <Icon name="noto:heart-suit" size="20px" :class="{'animate-bounce': heartAdding && (index == currentId)}" />
               <div v-if="junk.hearts.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.hearts.length }}
@@ -44,7 +54,7 @@
             </button>
           </div>
           <div class="flex flex-col items-center justify-center">
-            <button @click="addRate(index, 'thumbsUps', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.thumbsUps.includes(userCookie.id) ? 'bg-gray-700/30' : ''}`">
+            <button @click="addRate(index, 'thumbsUps', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.thumbsUps.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
               <Icon name="noto:thumbs-up" size="20px" :class="{'animate-bounce': thumbsupAdding && (index == currentId)}" />
               <div v-if="junk.thumbsUps.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.thumbsUps.length }}
@@ -52,7 +62,7 @@
             </button>
           </div>
           <div class="flex flex-col items-center justify-center">
-            <button @click="addRate(index, 'okays', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.okays.includes(userCookie.id) ? 'bg-gray-700/30' : ''}`">
+            <button @click="addRate(index, 'okays', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.okays.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
               <Icon name="noto:ok-hand" size="20px" :class="{'animate-bounce': okayAdding && (index == currentId)}" />
               <div v-if="junk.okays.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.okays.length }}
@@ -60,7 +70,7 @@
             </button>
           </div>
           <div class="flex flex-col items-center justify-center">
-            <button @click="addRate(index, 'garbages', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${junk.garbages.includes(userCookie.id) ? 'bg-gray-700/30' : ''}`">
+            <button @click="addRate(index, 'garbages', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.garbages.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
               <Icon name="noto:thumbs-down" size="20px" :class="{'animate-bounce': garbageAdding && (index == currentId)}" />
               <div v-if="junk.garbages.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.garbages.length }}
@@ -85,17 +95,17 @@
     window.addEventListener('scroll', handleScroll)
   })
   
+  const userCookie = useCookie('user') ? useCookie('user') : {}
+  
   function handleScroll() {
     if(window.scrollY + window.innerHeight >= document.body.scrollHeight + 10) {
       next()
     }
   }
-  const userCookie = useCookie('user')
-  const userName = ref(userCookie.value.username || "")
-  
+  const userName = ref("")
+  userName.value = userCookie.length > 0 ? userCookie.value.username : ""
   const authorInputHandler = (e) => {
     authorName.value = e.target.value
-    userFromCookie.value = authorName.value
   }
   
   let page = ref(0)
@@ -126,7 +136,7 @@
         body: {
           text: junkText.value,
           author: userCookie.value.id,
-          username: userName
+          username: userName.value
         }
       })
       )
@@ -144,6 +154,10 @@
   const garbageAdding = ref(false)
   
   const addRate = async (index, value, id) => {
+    if(!userCookie.value) {
+      alert('Please connect to your account or create an account first.')
+      return
+    }
     switch (value) {
       case 'hearts':
         heartAdding.value = true

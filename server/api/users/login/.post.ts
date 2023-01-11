@@ -1,7 +1,6 @@
 import { User } from "../users.get";
 
 export default defineEventHandler(async (event) => {
-  console.log("login route reached");
   const { email, password } = await readBody(event);
   const user = await User.findOne({ email });
   if (!user) {

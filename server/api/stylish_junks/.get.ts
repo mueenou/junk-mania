@@ -62,6 +62,5 @@ export default defineEventHandler(async (event) => {
     })
     .limit(Number(limit()));
 
-  console.log(junks);
   return junks;
 });
