@@ -1,7 +1,6 @@
 import { StylishJunk } from "./.get";
 
 export default defineEventHandler(async (event) => {
-  console.log(getQuery(event));
   const { junkId } = getQuery(event);
   const { interaction } = getRouterParams(event);
   const { userId } = await readBody(event);
@@ -35,7 +34,6 @@ export default defineEventHandler(async (event) => {
     await post.save();
     return { message: "interaction added" };
   } catch (error) {
-    console.log(error);
     return error;
   }
 });
