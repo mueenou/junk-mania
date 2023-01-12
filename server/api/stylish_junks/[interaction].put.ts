@@ -1,4 +1,4 @@
-import { StylishJunk } from "./.get";
+import { StylishJunk } from "../models/stylish_junk";
 
 export default defineEventHandler(async (event) => {
   const { junkId } = getQuery(event);

@@ -1,5 +1,5 @@
-import { User } from "../../users/users.get";
-import { StylishJunk } from "../.get";
+import { User } from "../../models/user";
+import { StylishJunk } from "../../models/stylish_junk";
 
 export default defineEventHandler(async (event) => {
   console.log("here");

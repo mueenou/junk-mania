@@ -1,4 +1,4 @@
-import { User } from "../users.get";
+import { User } from "../../models/user";
 
 export default defineEventHandler(async (event) => {
   const { email, password } = await readBody(event);
