@@ -103,8 +103,8 @@
   
   const {data: junks, refresh, pending} = useAsyncData(
     'junks',
-    () =>
-      $fetch(`/api/stylish_junks`, {
+    async () =>
+      await $fetch(`/api/stylish_junks`, {
         params: {
           page: page.value,
         },
