@@ -6,24 +6,33 @@ const stylishJunkSchema = new Schema(
       type: String,
       required: true,
     },
-    heart: {
-      type: Number,
-      default: 0,
-    },
-    thumbsUp: {
-      type: Number,
-      default: 0,
-    },
-    okay: {
-      type: Number,
-      default: 0,
-    },
-    garbage: {
-      type: Number,
-      default: 0,
-    },
+    hearts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    thumbsUps: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    okays: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    garbages: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     author: {
-      type: String,
+      type: Schema.Types.ObjectId,
+      ref: "User",
       required: true,
     },
   },
@@ -39,14 +48,17 @@ export default defineEventHandler(async (event) => {
     if (page == 0) {
       return junksPerPage;
     } else {
-      console.log(junksPerPage * page);
       return junksPerPage * (page + 1);
     }
   };
-  const junks = await StylishJunk.find({ garbage: { $lt: 5 } })
+  const junks = await StylishJunk.find({
+    $expr: { $lt: [{ $size: "$garbages" }, 5] },
+  })
+    .populate("author", "username")
     .sort({
       createdAt: -1,
     })
     .limit(Number(limit()));
+
   return junks;
 });
