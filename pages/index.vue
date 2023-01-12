@@ -90,18 +90,9 @@
     </div>
   </template>
   
-  <script setup>
-  onMounted(() => {
-    window.addEventListener('scroll', handleScroll)
-  })
-  
+  <script setup> 
   const userCookie = useCookie('user') ? useCookie('user') : {}
   
-  function handleScroll() {
-    if(window.scrollY + window.innerHeight >= document.body.scrollHeight + 10) {
-      next()
-    }
-  }
   const userName = ref("")
   userName.value = userCookie.length > 0 ? userCookie.value.username : ""
   const authorInputHandler = (e) => {
