@@ -42,7 +42,7 @@ const stylishJunkSchema = new Schema(
 export const StylishJunk = model<any>("StylishJunk", stylishJunkSchema);
 
 export default defineEventHandler(async (event) => {
-  const junksPerPage = 6;
+  const junksPerPage = 2;
   const page = Number(getQuery(event).page);
   const limit = () => {
     if (page == 0) {

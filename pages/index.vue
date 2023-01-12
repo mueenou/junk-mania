@@ -109,9 +109,6 @@
           page: page.value,
         },
       }),
-    {
-      watch: [page],
-    }
   );
   
   async function next() {
