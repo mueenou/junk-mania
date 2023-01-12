@@ -35,9 +35,6 @@ const stylishJunkSchema = new Schema(
       ref: "User",
       required: true,
     },
-    username: {
-      type: String,
-    },
   },
   { timestamps: true }
 );
@@ -57,6 +54,7 @@ export default defineEventHandler(async (event) => {
   const junks = await StylishJunk.find({
     $expr: { $lt: [{ $size: "$garbages" }, 5] },
   })
+    .populate("author", "username")
     .sort({
       createdAt: -1,
     })

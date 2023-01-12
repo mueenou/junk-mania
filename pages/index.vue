@@ -13,7 +13,7 @@
       </div>
       <div v-if="userCookie">
         <form class="flex flex-col gap-y-4 border-b border-gray-700 py-2 px-2 md:border-x" @submit.prevent="addJunk">
-          <input :value="authorName || userCookie?.username" @change="(e)=>authorInputHandler(e)" type="text" placeholder="What's your name?" class="w-[25%] h-12 p-2 text-white bg-black outline-none border-b border-gray-700">
+          <p class="p-2 text-white capitalize font-bold text-lg"> {{ authorName || userCookie?.username }}</p>
           <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-md text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
           <button type="submit" class="group bg-yellow-500 w-14 text-black self-end rounded-full h-10">
             <div class="group-hover:rotate-[30deg] duration-500 ease-out">
@@ -32,9 +32,9 @@
         <p v-else class="text-center">Latest junks...</p>
       </div>
       <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
-        <div v-if="junk.username" class="flex justify-end mb-2">
+        <div v-if="junk.author" class="flex justify-end mb-2">
           <span>
-            <p class="text-xs font-light text-gray-500">- {{ junk.username || "" }} -</p>
+            <p class="text-xs font-light text-gray-500 capitalize">- {{ junk.author.username || "" }} -</p>
           </span>
         </div>
         <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
