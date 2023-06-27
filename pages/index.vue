@@ -14,7 +14,7 @@
       <div v-if="userCookie">
         <form class="flex flex-col gap-y-4 border-b border-gray-700 py-2 px-2 md:border-x" @submit.prevent="addJunk">
           <p class="p-2 text-white capitalize font-bold text-lg"> {{ authorName || userCookie?.username }}</p>
-          <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-md text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
+          <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-xl text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
           <button type="submit" class="group bg-yellow-500 w-14 text-black self-end rounded-full h-10">
             <div class="group-hover:rotate-[30deg] duration-500 ease-out">
               <Icon size="25px" name="mi:delete-alt"/>
@@ -23,7 +23,7 @@
         </form>
       </div>
       <div class="border-b border-gray-700 py-2 px-2 md:border-x text-center" v-else>
-        <p class="text-xs">You are not connected.</p>
+        <p class="text-lg">Please sign in to throw your own junk !</p>
       </div>
       <div class="border-b border-gray-700 h-16 md:border-x py-4 hover:cursor-pointer hover:bg-gray-900/20" @click="refresh()">
         <div v-if="pending" class="text-center">
@@ -31,14 +31,16 @@
         </div>
         <p v-else class="text-center">Latest junks...</p>
       </div>
-      <div class="message bg-black hover:bg-gray-900/20 px-2 py-16 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
+      <div class="message bg-black hover:bg-gray-900/20 px-2 py-4 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
         <div v-if="junk.author" class="flex justify-end mb-2">
-          <span>
-            <p class="text-xs font-light text-gray-500 capitalize">- {{ junk.author.username || "" }} -</p>
+          <span class="flex flex-row items-baseline mb-12">
+            <p class="text-lg font-bold text-white capitalize">{{ junk.author.name + ' ' + junk.author.lastname || "" }}</p>
+            <p class="text-md font-medium text-gray-500 italic">&nbsp;@{{junk.author.username }}</p>
+            <!-- <pre>{{ junk.author }}</pre> -->
           </span>
         </div>
         <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
-        <div class="text text-center italic leading-loose py-6">
+        <div class="text text-lg text-center italic leading-loose py-6">
           <blockquote class="drop-shadow">
             " {{ junk.text }} "
           </blockquote>
@@ -47,7 +49,7 @@
         <div class="interactions mt-10 flex justify-evenly">
           <div class="flex flex-col items-center justify-center">
             <button @click="addRate(index, 'hearts', junk._id)" :class="`relative interaction-button group duration-300 heart hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.hearts.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`" >
-              <Icon name="noto:heart-suit" size="20px" :class="{'animate-bounce': heartAdding && (index == currentId)}" />
+              <Icon name="noto:heart-suit" size="40px" :class="{'animate-bounce': heartAdding && (index == currentId)}" />
               <div v-if="junk.hearts.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.hearts.length }}
               </div>
@@ -55,7 +57,7 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <button @click="addRate(index, 'thumbsUps', junk._id)" :class="`relative interaction-button group duration-300 thumbs-up hover:bg-gray-700/30 text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.thumbsUps.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
-              <Icon name="noto:thumbs-up" size="20px" :class="{'animate-bounce': thumbsupAdding && (index == currentId)}" />
+              <Icon name="noto:thumbs-up" size="40px" :class="{'animate-bounce': thumbsupAdding && (index == currentId)}" />
               <div v-if="junk.thumbsUps.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.thumbsUps.length }}
               </div>
@@ -63,7 +65,7 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <button @click="addRate(index, 'okays', junk._id)" :class="`relative interaction-button group duration-300 okay hover:bg-gray-700/30 text-black font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.okays.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
-              <Icon name="noto:ok-hand" size="20px" :class="{'animate-bounce': okayAdding && (index == currentId)}" />
+              <Icon name="noto:ok-hand" size="40px" :class="{'animate-bounce': okayAdding && (index == currentId)}" />
               <div v-if="junk.okays.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.okays.length }}
               </div>
@@ -71,7 +73,7 @@
           </div>
           <div class="flex flex-col items-center justify-center">
             <button @click="addRate(index, 'garbages', junk._id)" :class="`relative interaction-button group duration-300 hover:bg-gray-700/30 garbage text-white font-bold py-2 px-4 rounded-full text-lg h-14 w-14 flex items-center justify-center mb-1 ${userCookie ? junk.garbages.includes(userCookie.id) ? 'bg-gray-700/30' : '' : ''}`">
-              <Icon name="noto:thumbs-down" size="20px" :class="{'animate-bounce': garbageAdding && (index == currentId)}" />
+              <Icon name="noto:thumbs-down" size="40px" :class="{'animate-bounce': garbageAdding && (index == currentId)}" />
               <div v-if="junk.garbages.length > 0" class="absolute top-0 -right-1 bg-yellow-800 w-6 rounded-full text-xs text-gray-200">
                 {{ junk.garbages.length }}
               </div>
@@ -101,15 +103,7 @@
   
   let page = ref(0)
   
-  const {data: junks, refresh, pending} = useAsyncData(
-    'junks',
-    async () =>
-      await $fetch(`/api/stylish_junks`, {
-        params: {
-          page: page.value,
-        },
-      }),
-  );
+  const {data: junks, refresh, pending} = useFetch('/api/stylish_junks')
   
   async function next() {
     page.value = page.value + 1

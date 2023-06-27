@@ -13,7 +13,7 @@ export default defineEventHandler(async (event) => {
   const junks = await StylishJunk.find({
     $expr: { $lt: [{ $size: "$garbages" }, 5] },
   })
-    .populate("author", "username")
+    .populate("author", "username name lastname")
     .sort({
       createdAt: -1,
     })
