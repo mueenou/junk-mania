@@ -1,12 +1,18 @@
 import { User } from "../../models/user";
 
 export default defineEventHandler(async (event) => {
-  const { email, password, username } = await readBody(event);
+  const { email, password, username, name, lastname } = await readBody(event);
   const user = await User.findOne({ email });
   if (user) {
     return { message: "User already exist" };
   } else {
-    const newUser = await new User({ email, password, username });
+    const newUser = await new User({
+      email,
+      password,
+      username,
+      name,
+      lastname,
+    });
     try {
       await newUser.save();
       return {
