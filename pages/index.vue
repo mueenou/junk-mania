@@ -4,7 +4,7 @@
         <div>
           <h1 class="text-xl font-extrabold my-2 text-center">Home</h1>
         </div>
-        <button @click="userCookie = null" class="hover:bg-yellow-500/20 text-white font-bold h-16 w-16">
+        <button @click="logout()" class="hover:bg-yellow-500/20 text-white font-bold h-16 w-16">
           <span v-if="userCookie">Logout</span>
           <nuxt-link v-else to="/login">
             <span>Login</span>
@@ -106,21 +106,20 @@
   </template>
   
   <script setup> 
-  const userCookie = useCookie('user') ? useCookie('user') : {}
-  console.log(userCookie.value.id)
+  const userCookie = useCookie('user', {watch: true})
   const { data:userRatio } = useFetch('/api/users/ratio?userId=' + userCookie.value.id)
-  console.log(userRatio.value)
-
   const barPercentage = computed(() => {
     console.log('here')
-    // return (toRaw(userRatio.value).averageRatio * 100).toFixed(2)
-    return 40
+    return (toRaw(userRatio.value).averageRatio * 100)
   })
-
   watch(barPercentage,(newValue, oldValue) => {
     console.log(newValue)
   })
+  
 
+    const logout = () => {
+      userCookie.value = null
+    }
   
   const userName = ref("")
   userName.value = userCookie.length > 0 ? userCookie.value.username : ""
