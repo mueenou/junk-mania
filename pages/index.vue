@@ -1,10 +1,10 @@
 <template>
     <div class="text-white mt-16 w-full lg:w-[600px] md:w-[600px] mx-auto">
-      <div class="fixed flex flex-row justify-between py-3 md:w-[600px] md:border-x border-gray-700 top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-lg px-2 items-center">
+      <div class="fixed flex flex-row justify-between h-16 md:w-[600px] md:border-x border-gray-700 top-0 left-1/2 -translate-x-1/2 w-full z-50 backdrop-blur-lg pl-2 items-center">
         <div>
           <h1 class="text-xl font-extrabold my-2 text-center">Home</h1>
         </div>
-        <button @click="userCookie = null" class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold h-10 w-16 rounded">
+        <button @click="userCookie = null" class="hover:bg-yellow-500/20 text-white font-bold h-16 w-16">
           <span v-if="userCookie">Logout</span>
           <nuxt-link v-else to="/login">
             <span>Login</span>
@@ -12,11 +12,23 @@
         </button>
       </div>
       <div v-if="userCookie">
+        <div class="relative w-[600px] h-20 border-x border-gray-700 flex flex-row justify-center items-center border-t">
+          <div class="relative w-[570px] h-14 mt-2">
+            <div class="absolute -inset-0.5 bg-orange-400 blur opacity-100 bg-gradient-to-r from-pink-600 to-orange-400"></div>
+            <div class="relative bg-black h-full font-medium text-blue-100 text-center py-4 leading-none rounded-lg divide-x divide-gray-700 px-7">
+              <span v-if="barPercentage >= 30" class="pr-4 text-xl">
+                <Icon size="25px" name="mdi:flask" class="mr-7 -rotate-6 text-pink-600"/>
+                You are part of the
+              </span>
+              <span v-if="barPercentage >= 30" class="pl-4 text-xl font-extrabold italic underline">{{userRatio.level}}s !</span>
+            </div>
+          </div>
+        </div>
         <form class="flex flex-col gap-y-4 border-b border-gray-700 py-2 px-2 md:border-x" @submit.prevent="addJunk">
           <p class="p-2 text-white capitalize font-bold text-lg"> {{ authorName || userCookie?.username }}</p>
-          <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-xl text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
-          <button type="submit" class="group bg-yellow-500 w-14 text-black self-end rounded-full h-10">
-            <div class="group-hover:rotate-[30deg] duration-500 ease-out">
+          <textarea v-model="junkText" type="text" placeholder="Write your junk here..." class="p-2 text-lg text-white outline-none bg-black border-b border-gray-700 resize-none overflow-y-auto ml-14 w-100"></textarea>
+          <button type="submit" class="group w-14 text-black self-end rounded-full h-14 border border-gray-700 hover:bg-yellow-500/10">
+            <div class="group-hover:rotate-[30deg] justify-center duration-500 ease-out text-yellow-500">
               <Icon size="25px" name="mi:delete-alt"/>
             </div>
           </button>
@@ -29,14 +41,15 @@
         <div v-if="pending" class="text-center">
           <Icon size="30px" class="text-yellow-400" name="line-md:loading-twotone-loop"/>
         </div>
-        <p v-else class="text-center">Latest junks...</p>
+        <p v-else class="text-center text-yellow-500 text-sm">Latest junks...</p>
       </div>
       <div class="message bg-black hover:bg-gray-900/20 px-2 py-4 last:border-b-0 md:border-x border-b border-gray-700" v-for="(junk, index) in junks" :key="junk._id+index">
-        <div v-if="junk.author" class="flex justify-end mb-2">
+        <div v-if="junk.author" class="flex justify-start mb-2">
           <span class="flex flex-row items-baseline mb-12">
             <p class="text-lg font-bold text-white capitalize">{{ junk.author.name + ' ' + junk.author.lastname || "" }}</p>
-            <p class="text-md font-medium text-gray-500 italic">&nbsp;@{{junk.author.username }}</p>
-            <!-- <pre>{{ junk.author }}</pre> -->
+            <nuxt-link class="text-md font-medium text-gray-500 italic ml-1 hover:underline" to="/">
+              @{{junk.author.username }}
+            </nuxt-link>
           </span>
         </div>
         <div class="w-1/4 mx-auto border-[0.01px] border-gray-700"></div>
@@ -94,6 +107,20 @@
   
   <script setup> 
   const userCookie = useCookie('user') ? useCookie('user') : {}
+  console.log(userCookie.value.id)
+  const { data:userRatio } = useFetch('/api/users/ratio?userId=' + userCookie.value.id)
+  console.log(userRatio.value)
+
+  const barPercentage = computed(() => {
+    console.log('here')
+    // return (toRaw(userRatio.value).averageRatio * 100).toFixed(2)
+    return 40
+  })
+
+  watch(barPercentage,(newValue, oldValue) => {
+    console.log(newValue)
+  })
+
   
   const userName = ref("")
   userName.value = userCookie.length > 0 ? userCookie.value.username : ""
