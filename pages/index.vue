@@ -93,6 +93,8 @@
   </template>
   
   <script setup> 
+  const { signIn, signOut, session, status, cookies } = useAuth()
+  console.log(toRaw(session.value), toRaw(status.value), toRaw(cookies.value))
   const userCookie = useCookie('user') ? useCookie('user') : {}
   
   const userName = ref("")
